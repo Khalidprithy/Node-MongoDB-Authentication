@@ -12,7 +12,7 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 
 // database connection
-const dbURI = 'mongodb+srv://kbindev101:hxNwmF4iYsfbi5ML@cluster0.kwonfqz.mongodb.net/node-auth';
+
 mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
   .then((result) => app.listen(8000))
   .catch((err) => console.log(err));
@@ -23,6 +23,3 @@ app.get('/smoothies', (req, res) => res.render('smoothies'));
 
 app.use(authRoutes)
 
-
-// kbindev101
-// hxNwmF4iYsfbi5ML

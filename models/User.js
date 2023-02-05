@@ -16,8 +16,15 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-// Fire a function after doc saved to DB
+// Fire a function after document saved to DB
 userSchema.post('save', function (doc, next) {
+    console.log('New user created and saved', doc)
+    next();
+});
+
+// Fire a function before document saved to DB
+userSchema.pre('save', function (next) {
+    console.log('User about to be created and saved', this);
     next();
 })
 
