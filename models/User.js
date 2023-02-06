@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
-const { isEmail } = require('validator')
+const { isEmail } = require('validator');
+const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
     email: {
@@ -16,17 +17,26 @@ const userSchema = new mongoose.Schema({
     },
 });
 
-// Fire a function after document saved to DB
-userSchema.post('save', function (doc, next) {
-    console.log('New user created and saved', doc)
+
+// Fire a function before document saved to DB
+userSchema.pre('save', async function (next) {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
     next();
 });
 
-// Fire a function before document saved to DB
-userSchema.pre('save', function (next) {
-    console.log('User about to be created and saved', this);
-    next();
-})
+// Static method to login user
+userSchema.statics.login = async function (email, password) {
+    const user = await this.findOne({ email });
+    if (user) {
+        const auth = await bcrypt.compare(password, user.password);
+        if (auth) {
+            return user;
+        }
+        throw Error('Incorrect password');
+    }
+    throw Error('Incorrect email')
+}
 
 const User = mongoose.model('user', userSchema);
 
