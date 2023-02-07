@@ -3,6 +3,26 @@ const { isEmail } = require('validator');
 const bcrypt = require('bcrypt');
 
 const userSchema = new mongoose.Schema({
+    firstName: {
+        type: String,
+        required: [true, "Please enter your first name"],
+        maxLength: [12, 'Maximum length is 12 characters'],
+    },
+    lastName: {
+        type: String,
+        required: [true, "Please enter your last name"],
+        maxLength: [12, 'Maximum length is 12 characters'],
+    },
+    address: {
+        type: String,
+        required: [true, "Please enter your address"],
+        maxLength: [100, 'Maximum length is 100 characters'],
+    },
+    phone: {
+        type: Number,
+        required: [true, "Please enter your phone number"],
+        maxLength: [16, 'Maximum length is 16 digits'],
+    },
     email: {
         type: String,
         required: [true, "Please enter an Email"],

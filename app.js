@@ -18,13 +18,14 @@ app.set('view engine', 'ejs');
 // database connection
 const mongodbURI = `${process.env.SERVER_URI}`;
 mongoose.connect(mongodbURI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
-  .then((result) => app.listen(8000))
+  .then((result) => app.listen(8001))
   .catch((err) => console.log(err));
 
 // routes
 app.get('*', checkUser);
-app.get('/', (req, res) => res.render('home'));
-app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
+app.get('/', (req, res) => {
+  res.send('Welcome to Node MongoDB Auth')
+})
 
 app.use(authRoutes);
 

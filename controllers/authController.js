@@ -15,7 +15,6 @@ const handleErrors = (err) => {
         errors.password = 'Password incorrect'
     }
 
-
     // User exists error
     if (err.code === 11000) {
         errors.email = 'Email already registered';
@@ -37,22 +36,22 @@ const createToken = (id) => {
     return jwt.sign({ id }, `${process.env.HEX_TOKEN}`, { expiresIn: maxAge });
 }
 
-
-module.exports.signUpGet = (req, res) => {
-    res.render('signup')
-}
-
-module.exports.loginGet = (req, res) => {
-    res.render('login')
-}
-
 module.exports.signUpPost = async (req, res) => {
-    const { email, password } = req.body;
+    const { firstName, lastName, address, phone, email, password } = req.body;
     try {
-        const user = await User.create({ email, password });
+        const user = await User.create({ firstName, lastName, address, phone, email, password });
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 })
-        res.status(201).json({ user: user._id });
+        res.status(201).json({
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                address: user.address,
+                phone: user.phone,
+            }
+        });
     } catch (err) {
         const errors = handleErrors(err);
         res.status(400).json({ errors })
@@ -63,9 +62,19 @@ module.exports.loginPost = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.login(email, password);
+        console.log(user)
         const token = createToken(user._id);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(200).json({ user: user._id });
+        res.status(200).json({
+            user: {
+                id: user._id,
+                email: user.email,
+                firstName: user.firstName,
+                lastName: user.lastName,
+                address: user.address,
+                phone: user.phone,
+            }
+        });
 
     } catch (err) {
         const errors = handleErrors(err);
